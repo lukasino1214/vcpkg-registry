@@ -13,4 +13,4 @@ function UpdateVcpkgPort {
     }
 }
 
-UpdateVcpkgPort -Path ports/daxa/0.1.0/ -Branch packaged
+UpdateVcpkgPort -Path ports/daxa/ -Branch packaged
