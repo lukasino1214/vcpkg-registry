@@ -1,7 +1,11 @@
 {
     "default": {
-        "beicode": {
-            "baseline": "1.0.0",
+        "daxa": {
+            "baseline": "0.1.0",
+            "port-version": 0
+        },
+        "dxc": {
+            "baseline": "0.1.0",
             "port-version": 0
         }
     }
