@@ -32,78 +32,100 @@
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
 # # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "dxc currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.6.2112/dxc_2021_12_08.zip"
-    FILENAME "dxc_2021_12_08.zip"
-    SHA512 e9b36e896c1d47b39b648adbecf44da7f8543216fd1df539760f0c591907aea081ea6bfc59eb927073aaa1451110c5dc63003546509ff84c9e4445488df97c27
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
-    # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
-    # REF 1.0.0
-    # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    # PATCHES
-    #   001_port_fixes.patch
-    #   002_more_port_fixes.patch
-)
-
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-#     tbb   WITH_TBB
-#   INVERTED_FEATURES
-#     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
-# )
-file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
-cmake_minimum_required(VERSION 3.21)
-project(dxc VERSION 0.1.0)
-
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake [=[
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-if(_IMPORT_PREFIX STREQUAL "/")
-  set(_IMPORT_PREFIX "")
+# vcpkg_fail_port_install(MESSAGE "dxc currently only supports Linux and Windows platforms" ON_TARGET "Windows")
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.6.2112/dxc_2021_12_08.zip"
+        FILENAME "dxc_2021_12_08.zip"
+        SHA512 e9b36e896c1d47b39b648adbecf44da7f8543216fd1df539760f0c591907aea081ea6bfc59eb927073aaa1451110c5dc63003546509ff84c9e4445488df97c27
+    )
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        NO_REMOVE_ONE_LEVEL
+        # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
+        # REF 1.0.0
+        # (Optional) Read the docs for how to generate patches at:
+        # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+        # PATCHES
+        #   001_port_fixes.patch
+        #   002_more_port_fixes.patch
+    )
+    # # Check if one or more features are a part of a package installation.
+    # # See /docs/maintainers/vcpkg_check_features.md for more details
+    # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    #   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
+    #     tbb   WITH_TBB
+    #   INVERTED_FEATURES
+    #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
+    # )
+    file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
+    cmake_minimum_required(VERSION 3.21)
+    project(dxc VERSION 0.1.0)
+    include(CMakePackageConfigHelpers)
+    include(GNUInstallDirs)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake [=[
+    get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+    endif()
+    add_library(dxc::dxc SHARED IMPORTED)
+    set_target_properties(dxc::dxc PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+        INTERFACE_LINK_DIRECTORIES "${_IMPORT_PREFIX}/lib"
+        IMPORTED_LOCATION ${_IMPORT_PREFIX}/bin/dxcompiler.dll
+        IMPORTED_IMPLIB   ${_IMPORT_PREFIX}/lib/dxcompiler.lib
+    )
+    ]=])
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake
+        DESTINATION
+            ${CMAKE_INSTALL_DATADIR}/dxc)
+    install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/inc/ TYPE INCLUDE)
+    install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/bin/x64/ TYPE BIN PATTERN "*.exe" EXCLUDE)
+    install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/x64/ TYPE LIB)
+    ]==])
+elseif(VCPKG_TARGET_IS_LINUX)
+    set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR})
+    file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
+    cmake_minimum_required(VERSION 3.21)
+    project(dxc VERSION 0.1.0)
+    include(CMakePackageConfigHelpers)
+    include(GNUInstallDirs)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake [=[
+    get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+    endif()
+    add_library(dxc::dxc SHARED IMPORTED)
+    set_target_properties(dxc::dxc PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+        INTERFACE_LINK_LIBRARIES "${_IMPORT_PREFIX}/lib/libdxclib.a"
+        INTERFACE_LINK_DIRECTORIES "${_IMPORT_PREFIX}/lib"
+        IMPORTED_LOCATION ${_IMPORT_PREFIX}/lib/libdxcompiler.so.3.7
+        # IMPORTED_IMPLIB   ${_IMPORT_PREFIX}/lib/libdxcompiler.so
+    )
+    ]=])
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake
+        DESTINATION
+            ${CMAKE_INSTALL_DATADIR}/dxc)
+    install(DIRECTORY $ENV{VULKAN_SDK}/include/dxc TYPE INCLUDE)
+    # install(FILES $ENV{VULKAN_SDK}/bin/x64/ TYPE BIN PATTERN "*.exe" EXCLUDE)
+    install(FILES $ENV{VULKAN_SDK}/lib/libdxcompiler.so.3.7 TYPE LIB)
+    install(FILES $ENV{VULKAN_SDK}/lib/libdxclib.a TYPE LIB)
+    ]==])
 endif()
-
-add_library(dxc::dxc SHARED IMPORTED)
-set_target_properties(dxc::dxc PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-    INTERFACE_LINK_DIRECTORIES "${_IMPORT_PREFIX}/lib"
-    
-    IMPORTED_LOCATION ${_IMPORT_PREFIX}/bin/dxcompiler.dll
-    IMPORTED_IMPLIB   ${_IMPORT_PREFIX}/lib/dxcompiler.lib
-)
-]=])
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake
-    DESTINATION
-        ${CMAKE_INSTALL_DATADIR}/dxc)
-
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/inc/ TYPE INCLUDE)
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/bin/x64/ TYPE BIN PATTERN "*.exe" EXCLUDE)
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/x64/ TYPE LIB)
-
-]==])
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
