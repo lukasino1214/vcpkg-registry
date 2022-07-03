@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Ipotrick/Daxa
-    REF 4338de7ff32d22ba6c8f5aa8e6e9b843db097a1f
+    REF 8356f0250530e6b22fd43f67388a2400316e1b62
 )
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
