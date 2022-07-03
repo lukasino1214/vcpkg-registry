@@ -104,11 +104,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
     add_library(dxc::dxc SHARED IMPORTED)
     set_target_properties(dxc::dxc PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-        INTERFACE_LINK_LIBRARIES "${_IMPORT_PREFIX}/lib/libdxclib.a"
-        INTERFACE_LINK_DIRECTORIES "${_IMPORT_PREFIX}/lib"
+        INTERFACE_INCLUDE_DIRECTORIES ${_IMPORT_PREFIX}/include
+        INTERFACE_LINK_LIBRARIES ${_IMPORT_PREFIX}/lib/libLLVMDxcSupport.a
+        INTERFACE_LINK_DIRECTORIES ${_IMPORT_PREFIX}/lib
         IMPORTED_LOCATION ${_IMPORT_PREFIX}/lib/libdxcompiler.so.3.7
-        # IMPORTED_IMPLIB   ${_IMPORT_PREFIX}/lib/libdxcompiler.so
+        IMPORTED_IMPLIB ${_IMPORT_PREFIX}/lib/libdxclib.a
     )
     ]=])
     install(
@@ -117,9 +117,8 @@ elseif(VCPKG_TARGET_IS_LINUX)
         DESTINATION
             ${CMAKE_INSTALL_DATADIR}/dxc)
     install(DIRECTORY $ENV{VULKAN_SDK}/include/dxc TYPE INCLUDE)
-    # install(FILES $ENV{VULKAN_SDK}/bin/x64/ TYPE BIN PATTERN "*.exe" EXCLUDE)
-    install(FILES $ENV{VULKAN_SDK}/lib/libdxcompiler.so.3.7 TYPE LIB)
-    install(FILES $ENV{VULKAN_SDK}/lib/libdxclib.a TYPE LIB)
+    install(FILES     $ENV{VULKAN_SDK}/lib/libdxcompiler.so.3.7 $ENV{VULKAN_SDK}/lib/libdxclib.a $ENV{VULKAN_SDK}/lib/libLLVMDxcSupport.a TYPE LIB)
+    install(FILES     TYPE LIB)
     ]==])
 endif()
 
