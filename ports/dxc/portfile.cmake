@@ -139,8 +139,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if (VCPKG_TARGET_IS_LINUX)
     # We must modify the support/winadapter.h header to actually be able to compile
     file(READ "${CURRENT_PACKAGES_DIR}/include/dxc/Support/WinAdapter.h" WIN_ADAPTER_H)
-    string(REGEX REPLACE [=[__uuidof\((.)\{\}\)]=] [=[__uuidof(decltype(\1{}))]=] WIN_ADAPTER_H_FIXED ${WIN_ADAPTER_H})
-    file(WRITE "${CURRENT_PACKAGES_DIR}/include/dxc/Support/WinAdapter.h" ${WIN_ADAPTER_H_FIXED})
+    string(REGEX REPLACE [=[__uuidof\((.)\)([^ ])]=] [=[__uuidof(decltype(\1{}))\2]=] WIN_ADAPTER_H_FIXED "${WIN_ADAPTER_H}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/include/dxc/Support/WinAdapter.h" "${WIN_ADAPTER_H_FIXED}")
 endif()
 
 # Handle copyright (copied verbatim from github.com/microsoft/DirectXShaderCompiler)
