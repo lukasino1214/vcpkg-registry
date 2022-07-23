@@ -1,22 +1,27 @@
 {
     "name": "daxa",
-    "version": "0.1.0",
-    "description": "Daxa C++ Rendering API",
+    "version": "1.0.0",
+    "description": "Daxa C++ Vulkan Abstraction",
     "homepage": "https://github.com/Ipotrick/Daxa",
     "dependencies": [
-        "stb",
-        "vulkan",
-        "glslang",
-        "spirv-cross",
+        "dxc",
         "vulkan-memory-allocator",
-        "glm",
-        "imgui",
-        "glfw3",
-        "fmt",
-        "glad",
-        "cgltf",
-        "shaderc",
-        "tinyexr",
-        "dxc"
-    ]
+        "volk",
+        "vulkan"
+    ],
+    "features": {
+        "utils": {
+            "description": "Build with core utils",
+            "dependencies": [
+                "imgui"
+            ]
+        },
+        "tests": {
+            "description": "Build Tests",
+            "dependencies": [
+                "glfw3",
+                "glm"
+            ]
+        }
+    }
 }
