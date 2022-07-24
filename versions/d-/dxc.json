@@ -1,8 +1,1 @@
-{
-    "versions": [
-        {
-            "version": "0.1.0",
-            "git-tree": "cf25e51e69336b8074b3e3945ecdf7c96045ef06"
-        }
-    ]
-}
+{"versions":[{"version": "0.1.0","git-tree": "HEAD:ports/dxc/0.1.0"}]}
