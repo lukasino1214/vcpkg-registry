@@ -9,11 +9,11 @@ function update_vcpkg_port() {
         $template_path = "ports/$name/templates/$($args[$arg_i + 1])"
         $template_portfile = Get-Content "$template_path/portfile.cmake"
         $template_manifest = Get-Content "$template_path/vcpkg.json"
-        Write-Host "$name $port_version $port_path"
+        # Write-Host "$name $port_version $port_path"
         if (Test-Path -Path "$port_path") {
-            Remove-Item "$port_path" -Recurse -Force
+            Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
-        New-Item -Path "$port_path" -ItemType Directory
+        New-Item -Path "$port_path" -ItemType Directory | Out-Null
         if ("$template_portfile" -match 'URL ([^\s]*)') {
             $url = $Matches[1]
             $result = git ls-remote $url $branch
@@ -21,7 +21,7 @@ function update_vcpkg_port() {
             $hash = $result[0]
             ($template_portfile) ` -replace 'REF [^\n]*', "REF $hash" ` | Out-File $port_path/portfile.cmake -Encoding ascii
         } else {
-            Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake"
+            Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
         }
         ($template_manifest) ` -replace '"version": [^,]*', "`"version`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
@@ -50,8 +50,12 @@ function update_vcpkg_port() {
     git commit --amend --no-edit
 }
 
-update_vcpkg_port daxa    "0.1.0" "0" packaged    "1.0.0" "0" 1.0
+update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" 1.0
 # HEAD 0 master
-update_vcpkg_port dxc     "0.1.0" "0" master
+update_vcpkg_port    dxc     "0.1.0" "0" master
 
+git pull
 git push
+
+$new_commit_hash = git rev-parse HEAD
+Write-Host "$new_commit_hash"
