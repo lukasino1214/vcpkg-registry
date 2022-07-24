@@ -9,7 +9,6 @@ function update_vcpkg_port() {
         $template_path = "ports/$name/templates/$($args[$arg_i + 1])"
         $template_portfile = Get-Content "$template_path/portfile.cmake"
         $template_manifest = Get-Content "$template_path/vcpkg.json"
-        # Write-Host "$name $port_version $port_path"
         if (Test-Path -Path "$port_path") {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
@@ -25,33 +24,31 @@ function update_vcpkg_port() {
         }
         ($template_manifest) ` -replace '"version": [^,]*', "`"version`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
-
-    git add "ports/$name"
-    git commit -m "Updated $name"
-
-    $new_versionfile_content = "{`"versions`":["
-
-    For ($i = 0; $i -lt $n_versions; $i++) {
-        $arg_i = 1 + $i * 3
-        $port_version = $args[$arg_i + 0]
-        $port_path = "ports/$name/$port_version"
-        $branch = $args[$arg_i + 2]
-        $hash = git rev-parse HEAD:"$port_path"
-        $name_first_char = $name[0]
-        if ($i -gt 0) {
-            $new_versionfile_content = "$new_versionfile_content,"
+    $git_status = git status "ports/daxa"
+    if ("$git_status" -match 'Changes not staged') { 
+        git add "ports/$name"
+        git commit -m "Updated $name"
+        $new_versionfile_content = "{`"versions`":["
+        For ($i = 0; $i -lt $n_versions; $i++) {
+            $arg_i = 1 + $i * 3
+            $port_version = $args[$arg_i + 0]
+            $port_path = "ports/$name/$port_version"
+            $branch = $args[$arg_i + 2]
+            $hash = git rev-parse HEAD:"$port_path"
+            $name_first_char = $name[0]
+            if ($i -gt 0) {
+                $new_versionfile_content = "$new_versionfile_content,"
+            }
+            $new_versionfile_content = "$new_versionfile_content{`"version`": `"$port_version`",`"git-tree`": `"$hash`"}"
         }
-        $new_versionfile_content = "$new_versionfile_content{`"version`": `"$port_version`",`"git-tree`": `"$hash`"}"
+        $new_versionfile_content = "$new_versionfile_content]}"
+        "$new_versionfile_content" | Out-File "versions/$name_first_char-/$name.json" -Encoding ascii
+        git add "versions/$name_first_char-/$name.json"
+        git commit --amend --no-edit
     }
-    $new_versionfile_content = "$new_versionfile_content]}"
-
-    "$new_versionfile_content" | Out-File "versions/$name_first_char-/$name.json" -Encoding ascii
-    git add "versions/$name_first_char-/$name.json"
-    git commit --amend --no-edit
 }
 
 update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" 1.0
-# HEAD 0 master
 update_vcpkg_port    dxc     "0.1.0" "0" master
 
 git pull
