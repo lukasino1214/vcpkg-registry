@@ -60,7 +60,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
     # )
     file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
-    cmake_minimum_required(VERSION 3.21)
+    cmake_minimum_required(VERSION 3.12)
     project(dxc VERSION 0.1.0)
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
@@ -91,10 +91,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_LINUX)
     set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR})
     file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
-    cmake_minimum_required(VERSION 3.21)
+    cmake_minimum_required(VERSION 3.12)
     project(dxc VERSION 0.1.0)
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
+    if("$ENV{VULKAN_SDK}" STREQUAL "")
+        message(FATAL_ERROR "On linux, you must have the VulkanSDK installed, (it comes with DXC) download and extract the archive, and source the script within to get the VULKAN_SDK environment variable!")
+    endif()
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake [=[
     get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
