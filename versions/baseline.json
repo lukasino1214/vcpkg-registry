@@ -5,7 +5,7 @@
             "port-version": 0
         },
         "dxc": {
-            "baseline": "0.1.0",
+            "baseline": "0.1.1",
             "port-version": 0
         }
     }
