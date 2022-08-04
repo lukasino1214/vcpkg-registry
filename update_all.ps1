@@ -24,7 +24,7 @@ function update_vcpkg_port() {
         }
         ($template_manifest) ` -replace '"version": [^,]*', "`"version`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
-    $git_status = git status "ports/daxa"
+    $git_status = git status "ports/$name"
     if ("$git_status" -match 'Changes not staged') { 
         git add "ports/$name"
         git commit -m "Updated $name"
@@ -48,7 +48,7 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" 1.0
+update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" refs/tags/1.0.0-rc1
 update_vcpkg_port    dxc     "0.1.0" "0" master
 
 git pull
