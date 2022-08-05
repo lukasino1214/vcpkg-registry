@@ -35,9 +35,9 @@
 # vcpkg_fail_port_install(MESSAGE "dxc currently only supports Linux and Windows platforms" ON_TARGET "Windows")
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.7.2207/dxc_2022_07_18.zip"
-        FILENAME "dxc_2022_07_18.zip"
-        SHA512 b34d770ed9299e6a9ade12cd8d9add28f50e41abdfcdbc7e272568d7f78fe5a8f2bbe5f905839981b97d34b52e1fa627ceacd55743f2cf71e39861418b11ae3b
+        URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.6.2112/dxc_2021_12_08.zip"
+        FILENAME "dxc_2021_12_08.zip"
+        SHA512 e9b36e896c1d47b39b648adbecf44da7f8543216fd1df539760f0c591907aea081ea6bfc59eb927073aaa1451110c5dc63003546509ff84c9e4445488df97c27
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
