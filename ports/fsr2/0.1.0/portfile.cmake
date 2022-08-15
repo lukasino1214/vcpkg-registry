@@ -1,13 +1,21 @@
 # vcpkg_from_git(
 # OUT_SOURCE_PATH SOURCE_PATH
 # URL https://github.com/GPUOpen-Effects/FidelityFX-FSR2
-# REF 
+# REF
 # )
 
 find_program(GIT git)
 set(GIT_URL "https://github.com/GPUOpen-Effects/FidelityFX-FSR2")
 set(GIT_REV "2e6d42ad0a6822c934ffc6121c1e9541af870777")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
+
+if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src)
+endif()
+
+if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/${PORT}")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/${PORT})
+endif()
 
 if(NOT EXISTS "${SOURCE_PATH}/.git")
     message(STATUS "Cloning and fetching submodules")
@@ -301,18 +309,12 @@ source_group("shaders" FILES ${SHADERS})
 
 if(WITH_DX12)
     list(APPEND FSR2_DEFINES "-DFFX_FSR2_API_DX12=ON")
-    # list(APPEND FSR2_DEFINES "-DGFX_API_DX12=ON")
     list(APPEND FSR2_DEFINES "-DFFX_FSR2_API_VK=OFF")
-    # list(APPEND FSR2_DEFINES "-DGFX_API_VK=OFF")
-    # list(APPEND FSR2_DEFINES "-DGFX_API=DX12")
 endif()
 
 if(WITH_VULKAN)
     list(APPEND FSR2_DEFINES "-DFFX_FSR2_API_DX12=OFF")
-    # list(APPEND FSR2_DEFINES "-DGFX_API_DX12=OFF")
     list(APPEND FSR2_DEFINES "-DFFX_FSR2_API_VK=ON")
-    # list(APPEND FSR2_DEFINES "-DGFX_API_VK=ON")
-    # list(APPEND FSR2_DEFINES "-DGFX_API=VK")
 endif()
 
 vcpkg_configure_cmake(
