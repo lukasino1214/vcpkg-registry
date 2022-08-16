@@ -48,7 +48,7 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" refs/tags/1.0.0
+update_vcpkg_port    daxa    "0.1.0" "0" packaged    "1.0.0" "1" refs/tags/1.0.0-rc3
 update_vcpkg_port    dxc     "0.1.2" "0" master
 update_vcpkg_port    fsr2    "0.1.0" "0" refs/tags/v2.0.1a
 
