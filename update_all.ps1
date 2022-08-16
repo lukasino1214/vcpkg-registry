@@ -8,7 +8,6 @@ function update_vcpkg_port() {
         $branch = $args[$arg_i + 2]
         $template_path = "ports/$name/templates/$($args[$arg_i + 1])"
         $template_portfile = Get-Content "$template_path/portfile.cmake"
-        $template_manifest = Get-Content "$template_path/vcpkg.json"
         if (Test-Path -Path "$port_path") {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
@@ -19,9 +18,15 @@ function update_vcpkg_port() {
             $result = $result -split { $_ -match "[^0-9a-f]"}
             $hash = $result[0]
             ($template_portfile) ` -replace 'REF [^\n]*', "REF $hash" ` | Out-File $port_path/portfile.cmake -Encoding ascii
+            if ("$url" -match "https://github.com/(.*)") {
+                $owner_and_repo = $Matches[1]
+                # TODO: Figure out why I can't download a file through the script
+                # Invoke-WebRequest -Uri "raw.githubusercontent.com/$owner_and_repo/$branch/vcpkg.json" -OutFile "$template_path/vcpkg.json"
+            }
         } else {
             Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
         }
+        $template_manifest = Get-Content "$template_path/vcpkg.json"
         ($template_manifest) ` -replace '"version": [^,]*', "`"version`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
     $git_status = git status "ports/$name"

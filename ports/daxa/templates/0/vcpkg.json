@@ -1,12 +1,9 @@
 {
     "name": "daxa",
     "version": "0.1.0",
-    "description": "Daxa C++ Rendering API",
-    "homepage": "https://github.com/Ipotrick/Daxa",
     "dependencies": [
         "stb",
         "vulkan",
-        "glslang",
         "spirv-cross",
         "vulkan-memory-allocator",
         "glm",
@@ -15,7 +12,6 @@
         "fmt",
         "glad",
         "cgltf",
-        "shaderc",
         "tinyexr",
         "dxc"
     ]
