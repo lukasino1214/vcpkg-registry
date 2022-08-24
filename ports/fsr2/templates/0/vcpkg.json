@@ -9,7 +9,9 @@
         },
         "vulkan": {
             "description": "Build for Vulkan",
-            "dependencies": []
+            "dependencies": [
+                "vulkan"
+            ]
         },
         "volk": {
             "description": "Use the Volk loader for Vulkan",
