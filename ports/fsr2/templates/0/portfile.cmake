@@ -40,32 +40,19 @@ endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin/ffx_fsr2_api/)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_HOME_DIRECTORY}/bin/ffx_fsr2_api/)
-add_compile_definitions(_UNICODE)
-add_compile_definitions(UNICODE)
+add_compile_definitions(_UNICODE UNICODE)
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    add_compile_definitions(FFX_GCC)
+endif()
 
 if(FSR2_VS_VERSION STREQUAL 2015)
     message(NOTICE "Forcing the SDK path for VS 2015")
     set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.18362.0")
 endif()
 
-set(FFX_SC_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/sc/FidelityFX_SC.exe)
-set(FFX_SC_BASE_ARGS -reflection -deps=gcc -DFFX_GPU=1 -DOPT_PRECOMPUTE_REACTIVE_MAX=1)
-
-set(FFX_SC_PERMUTATION_ARGS
-    -DFFX_FSR2_OPTION_USE_LANCZOS_LUT={0,1}
-    -DFFX_FSR2_OPTION_HDR_COLOR_INPUT={0,1}
-    -DFFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS={0,1}
-    -DFFX_FSR2_OPTION_JITTERED_MOTION_VECTORS={0,1}
-    -DFFX_FSR2_OPTION_INVERTED_DEPTH={0,1}
-    -DFFX_FSR2_OPTION_APPLY_SHARPENING={0,1})
-
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 
-if(FSR2_BUILD_AS_DLL)
-    add_library(ffx_fsr2_api SHARED ${SOURCES})
-else()
-    add_library(ffx_fsr2_api STATIC ${SOURCES})
-endif()
+add_library(ffx_fsr2_api STATIC ${SOURCES})
 
 if(FFX_FSR2_API_DX12)
     message("Will build FSR2 library: DX12 backend")
@@ -130,6 +117,19 @@ if(WITH_VOLK)
     list(APPEND FSR2_DEFINES "-DWITH_VOLK=true")
 endif()
 
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    file(READ "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_util.h" ffx_util)
+    string(APPEND ffx_util [=[
+#define _countof(x) (sizeof(x) / sizeof(x[0]))
+#define strcpy_s strcpy
+]=])
+    file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_util.h" "${ffx_util}\n#define")
+
+    file(READ "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_types.h" ffx_types)
+    string(REGEX REPLACE "pragma once" "pragma once\n#include <stddef.h>" ffx_types "${ffx_types}")
+    file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_types.h" "${ffx_types}")
+endif()
+
 file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/vk/CMakeLists.txt" [==[
 if(NOT ${FFX_FSR2_API_VK})
     return()
@@ -138,12 +138,8 @@ endif()
 file(GLOB_RECURSE VK "${CMAKE_CURRENT_SOURCE_DIR}/../ffx_assert.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 find_package(Vulkan REQUIRED)
 
-if(FSR2_BUILD_AS_DLL)
-    add_library(ffx_fsr2_api_vk SHARED ${VK})
-    target_link_libraries(ffx_fsr2_api_vk PUBLIC Vulkan::Vulkan)
-else()
-    add_library(ffx_fsr2_api_vk STATIC ${VK})
-endif()
+target_link_libraries(ffx_fsr2_api_vk PUBLIC Vulkan::Vulkan)
+add_library(ffx_fsr2_api_vk STATIC ${VK})
 
 if(WITH_VOLK)
     find_package(volk CONFIG REQUIRED)
