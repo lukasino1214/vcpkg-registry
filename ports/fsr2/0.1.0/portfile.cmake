@@ -135,18 +135,6 @@ if(NOT ${FFX_FSR2_API_VK})
     return()
 endif()
 
-set(FFX_SC_VK_BASE_ARGS -compiler=glslang -e main --target-env vulkan1.1 -S comp -Os -DFFX_GLSL=1)
-file(GLOB SHADERS "${CMAKE_CURRENT_SOURCE_DIR}/../shaders/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/../shaders/*.glsl")
-set(PASS_SHADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_autogen_reactive_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_accumulate_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_compute_luminance_pyramid_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_depth_clip_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_lock_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_prepare_input_color_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_reconstruct_previous_depth_pass.glsl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../shaders/ffx_fsr2_rcas_pass.glsl)
-
 file(GLOB_RECURSE VK "${CMAKE_CURRENT_SOURCE_DIR}/../ffx_assert.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 find_package(Vulkan REQUIRED)
 
