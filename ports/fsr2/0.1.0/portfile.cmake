@@ -145,6 +145,11 @@ else()
     add_library(ffx_fsr2_api_vk STATIC ${VK})
 endif()
 
+if(WITH_VOLK)
+    find_package(volk CONFIG REQUIRED)
+    target_link_libraries(ffx_fsr2_api_vk PUBLIC volk::volk)
+endif()
+
 target_include_directories(ffx_fsr2_api_vk PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../shaders/vk>)
 target_include_directories(ffx_fsr2_api_vk PUBLIC ${Vulkan_INCLUDE_DIR})
 
