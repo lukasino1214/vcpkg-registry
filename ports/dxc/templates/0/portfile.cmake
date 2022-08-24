@@ -119,7 +119,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
             ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake
         DESTINATION
             ${CMAKE_INSTALL_DATADIR}/dxc)
-    install(DIRECTORY $ENV{VULKAN_SDK}/../source/DirectXShaderCompiler/include/dxc TYPE INCLUDE FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY $ENV{VULKAN_SDK}/include/dxc TYPE INCLUDE)
     install(FILES     $ENV{VULKAN_SDK}/lib/libdxcompiler.so.3.7 $ENV{VULKAN_SDK}/lib/libdxclib.a $ENV{VULKAN_SDK}/lib/libLLVMDxcSupport.a TYPE LIB)
     install(FILES     TYPE LIB)
     ]==])
