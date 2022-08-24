@@ -136,15 +136,15 @@ if(NOT ${FFX_FSR2_API_VK})
 endif()
 
 file(GLOB_RECURSE VK "${CMAKE_CURRENT_SOURCE_DIR}/../ffx_assert.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-find_package(Vulkan REQUIRED)
 
-target_link_libraries(ffx_fsr2_api_vk PUBLIC Vulkan::Vulkan)
 add_library(ffx_fsr2_api_vk STATIC ${VK})
 
 if(WITH_VOLK)
     find_package(volk CONFIG REQUIRED)
     target_link_libraries(ffx_fsr2_api_vk PUBLIC volk::volk)
 endif()
+find_package(Vulkan REQUIRED)
+target_link_libraries(ffx_fsr2_api_vk PUBLIC Vulkan::Vulkan)
 
 target_include_directories(ffx_fsr2_api_vk PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../shaders/vk>)
 target_include_directories(ffx_fsr2_api_vk PUBLIC ${Vulkan_INCLUDE_DIR})
