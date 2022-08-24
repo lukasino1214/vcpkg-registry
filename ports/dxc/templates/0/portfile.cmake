@@ -61,7 +61,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     # )
     file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
     cmake_minimum_required(VERSION 3.12)
-    project(dxc VERSION 0.1.0)
+    project(dxc VERSION 0.1.2)
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dxc-config.cmake [=[
@@ -92,7 +92,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
     set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR})
     file(WRITE ${SOURCE_PATH}/CMakeLists.txt [==[
     cmake_minimum_required(VERSION 3.12)
-    project(dxc VERSION 0.1.0)
+    project(dxc VERSION 0.1.2)
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
     if("$ENV{VULKAN_SDK}" STREQUAL "")
