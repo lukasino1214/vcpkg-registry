@@ -123,7 +123,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
 #define _countof(x) (sizeof(x) / sizeof(x[0]))
 #define strcpy_s strcpy
 ]=])
-    file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_util.h" "${ffx_util}\n#define")
+    file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_util.h" "${ffx_util}")
 
     file(READ "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_types.h" ffx_types)
     string(REGEX REPLACE "pragma once" "pragma once\n#include <stddef.h>" ffx_types "${ffx_types}")
