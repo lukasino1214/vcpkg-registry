@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "dependencies": [
         "stb",
+        "vulkan",
         "spirv-cross",
         "vulkan-memory-allocator",
         "glm",
