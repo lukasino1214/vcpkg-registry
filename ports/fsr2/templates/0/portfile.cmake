@@ -117,7 +117,7 @@ if(WITH_VOLK)
     list(APPEND FSR2_DEFINES "-DWITH_VOLK=true")
 endif()
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(VCPKG_TARGET_IS_LINUX)
     file(READ "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_util.h" ffx_util)
     string(APPEND ffx_util [=[
 #define _countof(x) (sizeof(x) / sizeof(x[0]))
