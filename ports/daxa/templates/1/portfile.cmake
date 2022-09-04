@@ -7,11 +7,19 @@ vcpkg_from_git(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     utils WITH_UTILS
+    dxc WITH_DXC
+    glslang WITH_GLSLANG
     tests WITH_TESTS
 )
 set(DAXA_DEFINES)
 if(WITH_UTILS)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS=true")
+endif()
+if(WITH_DXC)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_DXC=true")
+endif()
+if(WITH_GLSLANG)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_GLSLANG=true")
 endif()
 if(WITH_TESTS)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_TESTS=true")

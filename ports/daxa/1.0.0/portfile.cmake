@@ -1,17 +1,25 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Ipotrick/Daxa
-    REF c895d111a481156cb9d7f31f03d7279501b23dce
+    REF 6c444205f59d0e143760eea64c93aac4d1abbba1
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     utils WITH_UTILS
+    dxc WITH_DXC
+    glslang WITH_GLSLANG
     tests WITH_TESTS
 )
 set(DAXA_DEFINES)
 if(WITH_UTILS)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS=true")
+endif()
+if(WITH_DXC)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_DXC=true")
+endif()
+if(WITH_GLSLANG)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_GLSLANG=true")
 endif()
 if(WITH_TESTS)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_TESTS=true")
