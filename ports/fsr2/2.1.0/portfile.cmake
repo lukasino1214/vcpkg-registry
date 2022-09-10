@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/GPUOpen-Effects/FidelityFX-FSR2
-    REF ea97a113b0f9cadf519fbcff315cc539915a3acd
+    REF
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
