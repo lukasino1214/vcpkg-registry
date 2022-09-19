@@ -40,10 +40,6 @@ endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin/ffx_fsr2_api/)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_HOME_DIRECTORY}/bin/ffx_fsr2_api/)
-add_compile_definitions(_UNICODE UNICODE)
-if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    add_compile_definitions(FFX_GCC)
-endif()
 
 if(FSR2_VS_VERSION STREQUAL 2015)
     message(NOTICE "Forcing the SDK path for VS 2015")
@@ -53,6 +49,11 @@ endif()
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 
 add_library(ffx_fsr2_api STATIC ${SOURCES})
+
+target_compile_definitions(ffx_fsr2_api PUBLIC _UNICODE UNICODE)
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_compile_definitions(ffx_fsr2_api PUBLIC FFX_GCC)
+endif()
 
 if(FFX_FSR2_API_DX12)
     message("Will build FSR2 library: DX12 backend")
