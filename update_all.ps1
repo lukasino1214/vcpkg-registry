@@ -55,7 +55,9 @@ function update_vcpkg_port() {
 
 update_vcpkg_port    daxa    "0.1.0" "0" packaged              "1.0.0" "1" refs/heads/master
 update_vcpkg_port    dxc     "0.1.2" "0" refs/heads/master
-update_vcpkg_port    fsr2    "2.0.0" "0" refs/tags/v2.0.1a     "2.1.0" "0" refs/tags/v2.1.0
+update_vcpkg_port    fsr2    "2.0.0" "0" refs/tags/v2.0.1a
+
+# "2.1.0" "0" refs/tags/v2.1.0
 
 git pull
 git push

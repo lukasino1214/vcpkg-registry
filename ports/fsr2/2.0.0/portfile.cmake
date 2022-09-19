@@ -128,6 +128,7 @@ if(VCPKG_TARGET_IS_LINUX)
 
     file(READ "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_types.h" ffx_types)
     string(REGEX REPLACE "pragma once" "pragma once\n#include <stddef.h>" ffx_types "${ffx_types}")
+    string(REGEX REPLACE "__declspec.dllexport." " " ffx_types "${ffx_types}")
     file(WRITE "${SOURCE_PATH}/src/ffx-fsr2-api/ffx_types.h" "${ffx_types}")
 endif()
 
