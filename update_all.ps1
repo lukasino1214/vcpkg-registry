@@ -27,7 +27,7 @@ function update_vcpkg_port() {
             Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
         }
         $template_manifest = Get-Content "$template_path/vcpkg.json"
-        ($template_manifest) ` -replace '"version": [^,]*', "`"version`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
+        ($template_manifest) ` -replace '"version-string": [^,]*', "`"version-string`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
     $git_status = git status "ports/$name"
     if ("$git_status" -match 'Changes not staged') { 
@@ -44,7 +44,7 @@ function update_vcpkg_port() {
             if ($i -gt 0) {
                 $new_versionfile_content = "$new_versionfile_content,"
             }
-            $new_versionfile_content = "$new_versionfile_content{`"version`": `"$port_version`",`"git-tree`": `"$hash`"}"
+            $new_versionfile_content = "$new_versionfile_content{`"version-string`": `"$port_version`",`"git-tree`": `"$hash`"}"
         }
         $new_versionfile_content = "$new_versionfile_content]}"
         "$new_versionfile_content" | Out-File "versions/$name_first_char-/$name.json" -Encoding ascii
@@ -53,7 +53,7 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa    "0.1.0" "0" packaged              "1.0.0" "1" refs/heads/master
+update_vcpkg_port    daxa    "0.0.1" "0" packaged              "0.1.0" "1" 0.1.0       "nightly" "1" refs/heads/master
 update_vcpkg_port    dxc     "0.1.2" "0" refs/heads/master
 update_vcpkg_port    fsr2    "2.0.0" "0" refs/tags/v2.0.1a
 
