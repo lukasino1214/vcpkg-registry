@@ -1,6 +1,6 @@
 {
     "name": "fsr2",
-    "version": "2.1.0",
+    "version-string": "2.1.0",
     "description": "Unofficial FSR 2.0 API",
     "features": {
         "directx12": {
