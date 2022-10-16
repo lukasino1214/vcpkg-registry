@@ -12,7 +12,7 @@
             "baseline": "2.0.0",
             "port-version": 0
         },
-        "custom-glfw": {
+        "glfw3": {
             "baseline": "custom",
             "port-version": 0
         }
