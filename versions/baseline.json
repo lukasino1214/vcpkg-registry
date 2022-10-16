@@ -11,6 +11,10 @@
         "fsr2": {
             "baseline": "2.0.0",
             "port-version": 0
+        },
+        "custom-glfw": {
+            "baseline": "custom",
+            "port-version": 0
         }
     }
 }
