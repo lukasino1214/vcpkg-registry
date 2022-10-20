@@ -15,6 +15,10 @@
         "glfw3": {
             "baseline": "custom",
             "port-version": 0
+        },
+        "gvox": {
+            "baseline": "nightly",
+            "port-version": 0
         }
     }
 }
