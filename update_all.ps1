@@ -58,6 +58,7 @@ update_vcpkg_port    dxc      "0.1.2"   "0" refs/heads/master
 update_vcpkg_port    fsr2     "2.0.0"   "0" refs/tags/v2.0.1a
 update_vcpkg_port    glfw3    "custom"  "0" refs/heads/master
 update_vcpkg_port    gvox     "nightly" "0" refs/heads/master
+update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
 
 git pull
 git push
