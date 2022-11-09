@@ -16,6 +16,9 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+find_package(imgui CONFIG REQUIRED)
+target_link_libraries(imnodes PUBLIC imgui::imgui)
+
 # Packaging
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -23,6 +26,7 @@ file(WRITE ${CMAKE_BINARY_DIR}/config.cmake.in [=[
 @PACKAGE_INIT@
 include(${CMAKE_CURRENT_LIST_DIR}/imnodes-targets.cmake)
 check_required_components(imnodes)
+find_package(imgui CONFIG REQUIRED)
 ]=])
 
 configure_package_config_file(${CMAKE_BINARY_DIR}/config.cmake.in
