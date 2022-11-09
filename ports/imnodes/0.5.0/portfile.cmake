@@ -7,7 +7,7 @@ vcpkg_from_git(
 file(WRITE "${SOURCE_PATH}/CMakeLists.txt" [==[
 cmake_minimum_required(VERSION 3.15)
 project(imnodes VERSION 0.5.0)
-add_library(${PROJECT_NAME} "imnodes.cpp")
+add_library(${PROJECT_NAME} STATIC "imnodes.cpp")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
@@ -54,6 +54,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE.md"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
