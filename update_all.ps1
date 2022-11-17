@@ -16,7 +16,7 @@ function update_vcpkg_port() {
             if ($global:baseline_port_count -ne 0) {
                 $global:baseline_content = "$global:baseline_content,"
             }
-            $global:baseline_content = "$global:baseline_content`n"
+            $global:baseline_content = "$global:baseline_content`r`n"
             $global:baseline_port_count = $global:baseline_port_count + 1
             $global:baseline_content = "$global:baseline_content`"$name`":{`"baseline`":`"$version_string`""
         }
@@ -92,7 +92,7 @@ update_vcpkg_port    glfw3    "custom"  "0" refs/heads/master
 update_vcpkg_port    gvox     "nightly" "0" refs/heads/master
 update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
 
-$global:baseline_content = "$global:baseline_content`n}}"
+$global:baseline_content = "$global:baseline_content`r`n}}"
 "$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
 
 git add "versions/baseline.json"
