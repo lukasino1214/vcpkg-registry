@@ -67,12 +67,13 @@ function update_vcpkg_port() {
             $port_path = "ports/$name/$version_string"
             $manifest = Get-Content "$port_path/vcpkg.json"
             $branch = $args[$arg_i + 2]
+            $hash = git rev-parse HEAD:"$port_path"
             $name_first_char = $name[0]
             if ($i -gt 0) {
                 $new_versionfile_content = "$new_versionfile_content,"
             }
             $new_versionfile_content = "$new_versionfile_content{`"version-string`": `"$version_string`""
-            if ("$template_manifest" -match '"port-version": ([^\s]*),') {
+            if ("$manifest" -match '"port-version": ([^\s]*),') {
                 $port_version = $Matches[1]
                 $new_versionfile_content = "$new_versionfile_content,`"port-version`": $port_version"
             }
