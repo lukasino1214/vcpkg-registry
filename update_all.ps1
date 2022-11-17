@@ -1,3 +1,6 @@
+$global:baseline_content = "{`"default`": {"
+$global:baseline_port_count = 0
+
 function update_vcpkg_port() {
     $name = $args[0]
     $n_versions = ($args.length - 1) / 3
@@ -9,6 +12,14 @@ function update_vcpkg_port() {
         $template_path = "ports/$name/templates/$($args[$arg_i + 1])"
         $template_portfile = Get-Content "$template_path/portfile.cmake"
         $template_manifest = Get-Content "$template_path/vcpkg.json"
+        if ($i -eq 0) {
+            if ($global:baseline_port_count -ne 0) {
+                $global:baseline_content = "$global:baseline_content,"
+            }
+            $global:baseline_content = "$global:baseline_content`n"
+            $global:baseline_port_count = $global:baseline_port_count + 1
+            $global:baseline_content = "$global:baseline_content`"$name`":{`"baseline`":`"$version_string`""
+        }
         if (Test-Path -Path "$port_path") {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
@@ -17,6 +28,16 @@ function update_vcpkg_port() {
             $port_version = $Matches[1]
             $new_version = [int]$port_version + 1
             ($template_manifest) ` -replace '"port-version": [^\s]*,', "`"port-version`": $new_version," ` | Out-File $template_path/vcpkg.json -Encoding ascii
+            if ($i -eq 0) {
+                $global:baseline_content = "$global:baseline_content,`"port-version`": $new_version"
+            }
+        } else {
+            if ($i -eq 0) {
+                $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
+            }
+        }
+        if ($i -eq 0) {
+            $global:baseline_content = "$global:baseline_content}"
         }
         if ("$template_portfile" -match 'URL ([^\s]*)') {
             $url = $Matches[1]
@@ -64,12 +85,18 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa     "0.0.1"   "0" packaged              "0.1.0" "1" 0.1.0       "nightly" "1" refs/heads/master
+update_vcpkg_port    daxa     "0.1.0"   "1" 0.1.0              "0.0.1"   "0" packaged              "nightly" "1" refs/heads/master
 update_vcpkg_port    dxc      "0.1.2"   "0" refs/heads/master
 update_vcpkg_port    fsr2     "2.0.0"   "0" refs/tags/v2.0.1a
 update_vcpkg_port    glfw3    "custom"  "0" refs/heads/master
 update_vcpkg_port    gvox     "nightly" "0" refs/heads/master
 update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
+
+$global:baseline_content = "$global:baseline_content`n}}"
+"$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
+
+git add "versions/baseline.json"
+git commit -m "updated baseline"
 
 git pull
 git push
