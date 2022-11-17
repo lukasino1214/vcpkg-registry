@@ -24,34 +24,42 @@ function update_vcpkg_port() {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
         New-Item -Path "$port_path" -ItemType Directory | Out-Null
-        if ("$template_manifest" -match '"port-version": ([^\s]*),') {
-            $port_version = $Matches[1]
-            $new_version = [int]$port_version + 1
-            ($template_manifest) ` -replace '"port-version": [^\s]*,', "`"port-version`": $new_version," ` | Out-File $template_path/vcpkg.json -Encoding ascii
-            if ($i -eq 0) {
-                $global:baseline_content = "$global:baseline_content,`"port-version`": $new_version"
-            }
-        } else {
-            if ($i -eq 0) {
-                $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
-            }
-        }
-        if ($i -eq 0) {
-            $global:baseline_content = "$global:baseline_content}"
-        }
+        $port_version_bump = 0
         if ("$template_portfile" -match 'URL ([^\s]*)') {
             $url = $Matches[1]
             $result = git ls-remote $url $branch
             $result = $result -split { $_ -match "[^0-9a-f]"}
             $hash = $result[0]
             ($template_portfile) ` -replace 'REF [^\n]*', "REF $hash" ` | Out-File $port_path/portfile.cmake -Encoding ascii
-            if ("$url" -match "https://github.com/(.*)") {
-                $owner_and_repo = $Matches[1]
-                # TODO: Figure out why I can't download a file through the script
-                # Invoke-WebRequest -Uri "raw.githubusercontent.com/$owner_and_repo/$branch/vcpkg.json" -OutFile "$template_path/vcpkg.json"
+            # TODO: Figure out why I can't download a file through the script
+            # if ("$url" -match "https://github.com/(.*)") {
+            #     $owner_and_repo = $Matches[1]
+            #     Invoke-WebRequest -Uri "raw.githubusercontent.com/$owner_and_repo/$branch/vcpkg.json" -OutFile "$template_path/vcpkg.json"
+            # }
+            $git_status = git status "$port_path/portfile.cmake"
+            if ("$git_status" -match 'Changes not staged') { 
+                $port_version_bump = 1
+            }
+            if ("$template_manifest" -match '"port-version": ([^\s]*),') {
+                $port_version = $Matches[1]
+                $new_version = [int]$port_version + $port_version_bump
+                ($template_manifest) ` -replace '"port-version": [^\s]*,', "`"port-version`": $new_version," ` | Out-File $template_path/vcpkg.json -Encoding ascii
+                if ($i -eq 0) {
+                    $global:baseline_content = "$global:baseline_content,`"port-version`": $new_version"
+                }
+            } else {
+                if ($i -eq 0) {
+                    $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
+                }
             }
         } else {
             Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
+            if ($i -eq 0) {
+                $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
+            }
+        }
+        if ($i -eq 0) {
+            $global:baseline_content = "$global:baseline_content}"
         }
         $template_manifest = Get-Content "$template_path/vcpkg.json"
         ($template_manifest) ` -replace '"version-string": [^,]*', "`"version-string`": `"$version_string`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
@@ -96,11 +104,14 @@ update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
 $global:baseline_content = "$global:baseline_content`r`n}}"
 "$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
 
-git add "versions/baseline.json"
-git commit --amend --no-edit
+$git_status = git status "versions/baseline.json"
+if ("$git_status" -match 'Changes not staged') {
+    git add "versions/baseline.json"
+    git commit -m "Updated baseline"
+}
 
 git pull
 git push
 
-$new_commit_hash = git rev-parse HEAD
-Write-Host "$new_commit_hash"
+# $new_commit_hash = git rev-parse HEAD
+# Write-Host "$new_commit_hash"
