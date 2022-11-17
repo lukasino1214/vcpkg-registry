@@ -3,15 +3,21 @@ function update_vcpkg_port() {
     $n_versions = ($args.length - 1) / 3
     For ($i = 0; $i -lt $n_versions; $i++) {
         $arg_i = 1 + $i * 3
-        $port_version = $args[$arg_i + 0]
-        $port_path = "ports/$name/$port_version"
+        $version_string = $args[$arg_i + 0]
+        $port_path = "ports/$name/$version_string"
         $branch = $args[$arg_i + 2]
         $template_path = "ports/$name/templates/$($args[$arg_i + 1])"
         $template_portfile = Get-Content "$template_path/portfile.cmake"
+        $template_manifest = Get-Content "$template_path/vcpkg.json"
         if (Test-Path -Path "$port_path") {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
         }
         New-Item -Path "$port_path" -ItemType Directory | Out-Null
+        if ("$template_manifest" -match '"port-version": ([^\s]*),') {
+            $port_version = $Matches[1]
+            $new_version = [int]$port_version + 1
+            ($template_manifest) ` -replace '"port-version": [^\s]*,', "`"port-version`": $new_version," ` | Out-File $template_path/vcpkg.json -Encoding ascii
+        }
         if ("$template_portfile" -match 'URL ([^\s]*)') {
             $url = $Matches[1]
             $result = git ls-remote $url $branch
@@ -27,7 +33,7 @@ function update_vcpkg_port() {
             Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
         }
         $template_manifest = Get-Content "$template_path/vcpkg.json"
-        ($template_manifest) ` -replace '"version-string": [^,]*', "`"version-string`": `"$port_version`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
+        ($template_manifest) ` -replace '"version-string": [^,]*', "`"version-string`": `"$version_string`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
     }
     $git_status = git status "ports/$name"
     if ("$git_status" -match 'Changes not staged') { 
@@ -36,15 +42,20 @@ function update_vcpkg_port() {
         $new_versionfile_content = "{`"versions`":["
         For ($i = 0; $i -lt $n_versions; $i++) {
             $arg_i = 1 + $i * 3
-            $port_version = $args[$arg_i + 0]
-            $port_path = "ports/$name/$port_version"
+            $version_string = $args[$arg_i + 0]
+            $port_path = "ports/$name/$version_string"
+            $manifest = Get-Content "$port_path/vcpkg.json"
             $branch = $args[$arg_i + 2]
-            $hash = git rev-parse HEAD:"$port_path"
             $name_first_char = $name[0]
             if ($i -gt 0) {
                 $new_versionfile_content = "$new_versionfile_content,"
             }
-            $new_versionfile_content = "$new_versionfile_content{`"version-string`": `"$port_version`",`"git-tree`": `"$hash`"}"
+            $new_versionfile_content = "$new_versionfile_content{`"version-string`": `"$version_string`""
+            if ("$template_manifest" -match '"port-version": ([^\s]*),') {
+                $port_version = $Matches[1]
+                $new_versionfile_content = "$new_versionfile_content,`"port-version`": $port_version"
+            }
+            $new_versionfile_content = "$new_versionfile_content,`"git-tree`": `"$hash`"}"
         }
         $new_versionfile_content = "$new_versionfile_content]}"
         "$new_versionfile_content" | Out-File "versions/$name_first_char-/$name.json" -Encoding ascii
