@@ -96,7 +96,7 @@ $global:baseline_content = "$global:baseline_content`r`n}}"
 "$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
 
 git add "versions/baseline.json"
-git commit -m "updated baseline"
+git commit --amend --no-edit
 
 git pull
 git push
