@@ -6,11 +6,11 @@ jobs:
   UpdateAll:
     runs-on: windows-latest
     steps:
-      - name: Configure git credentials
-        uses: OleksiyRudenko/gha-git-credentials@v2.1.1
-        with:
-          token: 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
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.client_payload.ref }}
+      - name: Configure git credentials
+        uses: OleksiyRudenko/gha-git-credentials@v2.1.1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
       - run: ./update_all.ps1
