@@ -3,7 +3,7 @@ on:
   repository_dispatch:
     types: [update-all]
 jobs:
-  Update All:
+  UpdateAll:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
