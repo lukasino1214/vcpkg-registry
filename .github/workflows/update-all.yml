@@ -3,10 +3,10 @@ on:
   repository_dispatch:
     types: [update-all]
 jobs:
-  myEvent:
-    runs-on: ubuntu-latest
+  Update All:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.client_payload.ref }}
-      - run: echo ${{ github.event.client_payload.sha }}
+      - run: ./update-all.ps1
