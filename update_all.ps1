@@ -1,7 +1,5 @@
 $global:baseline_content = "{`r`n`"default`": {"
 $global:baseline_port_count = 0
-$global:baseline_nightly_content = ""
-$global:baseline_nightly_port_count = 0
 
 function update_vcpkg_port() {
     $name = $args[0]
@@ -21,13 +19,6 @@ function update_vcpkg_port() {
             $global:baseline_content = "$global:baseline_content`r`n"
             $global:baseline_port_count = $global:baseline_port_count + 1
             $global:baseline_content = "$global:baseline_content`"$name`":{`"baseline`":`"$version_string`""
-        } elseif ($version_string -eq "nightly") {
-            if ($global:baseline_nightly_port_count -ne 0) {
-                $global:baseline_nightly_content = "$global:baseline_nightly_content,"
-            }
-            $global:baseline_nightly_content = "$global:baseline_nightly_content`r`n"
-            $global:baseline_nightly_port_count = $global:baseline_nightly_port_count + 1
-            $global:baseline_nightly_content = "$global:baseline_nightly_content`"$name`":{`"baseline`":`"$version_string`""
         }
         if (Test-Path -Path "$port_path") {
             Remove-Item "$port_path" -Recurse -Force | Out-Null
@@ -55,28 +46,20 @@ function update_vcpkg_port() {
                 ($template_manifest) ` -replace '"port-version": [^\s]*,', "`"port-version`": $new_version," ` | Out-File $template_path/vcpkg.json -Encoding ascii
                 if ($i -eq 0) {
                     $global:baseline_content = "$global:baseline_content,`"port-version`": $new_version"
-                } elseif ($version_string -eq "nightly") {
-                    $global:baseline_nightly_content = "$global:baseline_nightly_content,`"port-version`": $new_version"
                 }
             } else {
                 if ($i -eq 0) {
                     $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
-                } elseif ($version_string -eq "nightly") {
-                    $global:baseline_nightly_content = "$global:baseline_nightly_content,`"port-version`": 0"
                 }
             }
         } else {
             Copy-Item "$template_path/portfile.cmake" -Destination "$port_path/portfile.cmake" | Out-Null
             if ($i -eq 0) {
                 $global:baseline_content = "$global:baseline_content,`"port-version`": 0"
-            } elseif ($version_string -eq "nightly") {
-                $global:baseline_nightly_content = "$global:baseline_nightly_content,`"port-version`": 0"
             }
         }
         if ($i -eq 0) {
             $global:baseline_content = "$global:baseline_content}"
-        } elseif ($version_string -eq "nightly") {
-            $global:baseline_nightly_content = "$global:baseline_nightly_content}"
         }
         $template_manifest = Get-Content "$template_path/vcpkg.json"
         ($template_manifest) ` -replace '"version-string": [^,]*', "`"version-string`": `"$version_string`"" ` | Out-File $port_path/vcpkg.json -Encoding ascii
@@ -111,14 +94,15 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa     "0.1.0"   "1" 0.1.0              "0.0.1"   "0" packaged              "nightly" "2" refs/heads/master
-update_vcpkg_port    dxc      "0.1.2"   "0" refs/heads/master
-update_vcpkg_port    fsr2     "2.0.0"   "0" refs/tags/v2.0.1a
-update_vcpkg_port    glfw3    "custom"  "0" refs/heads/master
-update_vcpkg_port    gvox     "nightly" "0" refs/heads/master
-update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
+update_vcpkg_port    daxa         "0.1.0"   "1" 0.1.0              "0.0.1"   "0" packaged
+update_vcpkg_port    daxa-nightly "nightly" "0" refs/heads/master
+update_vcpkg_port    dxc          "0.1.2"   "0" refs/heads/master
+update_vcpkg_port    fsr2         "2.0.0"   "0" refs/tags/v2.0.1a
+update_vcpkg_port    glfw3        "custom"  "0" refs/heads/master
+update_vcpkg_port    gvox         "nightly" "0" refs/heads/master
+update_vcpkg_port    imnodes      "0.5.0"   "0" refs/tags/v0.5
 
-$global:baseline_content = "$global:baseline_content`r`n},`r`n`"nightly`":{$global:baseline_nightly_content`r`n}`r`n}"
+$global:baseline_content = "$global:baseline_content`r`n}`r`n}"
 "$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
 
 $git_status = git status "versions/baseline.json"
