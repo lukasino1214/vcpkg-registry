@@ -1,7 +1,7 @@
 {
 "default": {
 "daxa":{"baseline":"0.1.0","port-version": 0},
-"daxa-nightly":{"baseline":"nightly","port-version": 1},
+"daxa-nightly":{"baseline":"nightly","port-version": -1},
 "dxc":{"baseline":"0.1.2","port-version": 0},
 "fsr2":{"baseline":"2.0.0","port-version": 0},
 "glfw3":{"baseline":"custom","port-version": 0},
