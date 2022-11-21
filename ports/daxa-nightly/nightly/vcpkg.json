@@ -1,7 +1,7 @@
 {
     "name": "daxa-nightly",
     "version-string": "nightly",
-    "port-version": 1,
+    "port-version": -1,
     "description": "Daxa C++ Vulkan Abstraction",
     "homepage": "https://github.com/Ipotrick/Daxa",
     "dependencies": [
