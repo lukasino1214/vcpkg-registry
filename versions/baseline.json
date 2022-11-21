@@ -1,11 +1,13 @@
 {
 "default": {
 "daxa":{"baseline":"0.1.0","port-version": 0},
-"daxa":{"baseline":"nightly","port-version": 6},
 "dxc":{"baseline":"0.1.2","port-version": 0},
 "fsr2":{"baseline":"2.0.0","port-version": 0},
 "glfw3":{"baseline":"custom","port-version": 0},
 "gvox":{"baseline":"nightly","port-version": 6},
 "imnodes":{"baseline":"0.5.0","port-version": 0}
+},
+"nightly":{
+"daxa":{"baseline":"nightly","port-version": 6}
 }
 }
