@@ -94,13 +94,12 @@ function update_vcpkg_port() {
     }
 }
 
-update_vcpkg_port    daxa         "0.1.0"   "1" 0.1.0              "0.0.1"   "0" packaged
-update_vcpkg_port    daxa-nightly "nightly" "0" refs/heads/master
-update_vcpkg_port    dxc          "0.1.2"   "0" refs/heads/master
-update_vcpkg_port    fsr2         "2.0.0"   "0" refs/tags/v2.0.1a
-update_vcpkg_port    glfw3        "custom"  "0" refs/heads/master
-update_vcpkg_port    gvox         "nightly" "0" refs/heads/master
-update_vcpkg_port    imnodes      "0.5.0"   "0" refs/tags/v0.5
+update_vcpkg_port    daxa     "nightly" "2" refs/heads/master   "0.1.0"   "1" 0.1.0   "0.0.1"   "0" packaged
+update_vcpkg_port    gvox     "nightly" "0" refs/heads/master
+# update_vcpkg_port    dxc      "0.1.2"   "0" refs/heads/master
+# update_vcpkg_port    fsr2     "2.0.0"   "0" refs/tags/v2.0.1a
+# update_vcpkg_port    glfw3    "custom"  "0" refs/heads/master
+# update_vcpkg_port    imnodes  "0.5.0"   "0" refs/tags/v0.5
 
 $global:baseline_content = "$global:baseline_content`r`n}`r`n}"
 "$global:baseline_content" | Out-File "versions/baseline.json" -Encoding ascii
