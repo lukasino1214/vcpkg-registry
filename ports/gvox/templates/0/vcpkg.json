@@ -4,10 +4,22 @@
     "port-version": 20,
     "description": "GVOX Voxel Format Library",
     "homepage": "https://github.com/GabeRundlett/gvox",
-    "dependencies": [],
+    "dependencies": [
+        "zlib",
+        "gzip-hpp"
+    ],
     "features": {
         "tests": {
-            "description": "Build Tests"
+            "description": "Build Tests",
+            "dependencies": [
+                {
+                    "name": "daxa",
+                    "features": [
+                        "glslang",
+                        "utils"
+                    ]
+                }
+            ]
         }
     }
 }
