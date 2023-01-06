@@ -1,14 +1,27 @@
 {
     "name": "gvox",
     "version-string": "nightly",
-    "port-version": 34,
+    "port-version": 35,
     "description": "GVOX Voxel Format Library",
     "homepage": "https://github.com/GabeRundlett/gvox",
     "dependencies": [
-        "zlib",
-        "gzip-hpp"
     ],
     "features": {
+        "file-io": {
+            "description": "Enable file IO library features"
+        },
+        "zlib": {
+            "description": "Build ZLIB format compressor",
+            "dependencies": [
+                "zlib"
+            ]
+        },
+        "gzip": {
+            "description": "Build GZIP format compressor",
+            "dependencies": [
+                "gzip-hpp"
+            ]
+        },
         "tests": {
             "description": "Build Tests",
             "dependencies": [
@@ -21,5 +34,6 @@
                 }
             ]
         }
-    }
+    },
+    "builtin-baseline": "f9bea5d58186dc14e7e33132e43b52222147f51e"
 }
