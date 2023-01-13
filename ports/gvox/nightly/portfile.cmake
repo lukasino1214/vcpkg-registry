@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/GabeRundlett/gvox
-    REF 5b4c1e0b1177024b85286c4fd913ee8194091214
+    REF f87c645c7441b89e164ee0c022094ed7a3d48aec
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
