@@ -1,6 +1,6 @@
 {
 "default": {
-"daxa":{"baseline":"nightly","port-version": 62},
+"daxa":{"baseline":"nightly","port-version": 63},
 "gvox":{"baseline":"nightly","port-version": 55},
 "dxc":{"baseline":"0.1.2","port-version": 0},
 "fsr2":{"baseline":"2.0.0","port-version": 0},
