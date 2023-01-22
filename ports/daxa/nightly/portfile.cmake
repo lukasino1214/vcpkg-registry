@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Ipotrick/Daxa
-    REF a90fce0884b1ddd5bdf33e82fb3090b0b58db1c7
+    REF 3b51e5ee9e7759934c8814d83e1a3e2edcf28466
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
